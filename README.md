@@ -19,15 +19,40 @@ Raw CSV - ETL Pipeline - PostgreSQL Star Schema - ML Model - FastAPI - Power BI 
 - Semester 1 grades are the strongest dropout predictor
 
 ## PowerBI Dashboard
-![Enrollment Intelligence Dashboard](dashboard/Dashboard Screenshot.png)
+![Dashboard](dashboard/Dashboard%20Screenshot.png)
 
 ## API
-[View API Docs](YOUR_RENDER_LINK_HERE/docs)
+> Deployment in progress — run locally with:
+```bash
+uvicorn api.main:app --reload
+```
+Then visit: http://127.0.0.1:8000/docs
+
+## Quick Start
+```bash
+git clone https://github.com/atleenjose/enrollment-intelligence.git
+cd enrollment-intelligence
+pip install -r requirements.txt
+uvicorn api.main:app --reload
+```
 
 ## Project Structure
-├── pipeline/        # ETL scripts
-├── database/        # Star schema SQL
-├── models/          # ML training
-├── api/             # FastAPI
-├── dashboard/       # Power BI exports
-└── data/            # Raw and cleaned data
+enrollment_intelligence/
+├── api/
+│   └── main.py              # FastAPI app
+├── data/
+│   ├── raw/                 # Original dataset
+│   └── cleaned/             # Exported KPI CSVs
+├── database/
+│   ├── schema.sql           # Star schema definition
+│   └── kpis.sql             # KPI queries
+├── models/
+│   ├── train_model.py       # ML training script
+│   ├── dropout_model.pkl    # Trained model
+│   └── feature_columns.pkl  # Feature definitions
+├── pipeline/
+│   └── etl.py               # ETL pipeline
+├── dashboard/
+│   └── Dashboard Screenshot.png
+├── requirements.txt
+└── README.md
