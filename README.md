@@ -37,22 +37,9 @@ uvicorn api.main:app --reload
 ```
 
 ## Project Structure
-enrollment_intelligence/
-├── api/
-│   └── main.py              # FastAPI app
-├── data/
-│   ├── raw/                 # Original dataset
-│   └── cleaned/             # Exported KPI CSVs
-├── database/
-│   ├── schema.sql           # Star schema definition
-│   └── kpis.sql             # KPI queries
-├── models/
-│   ├── train_model.py       # ML training script
-│   ├── dropout_model.pkl    # Trained model
-│   └── feature_columns.pkl  # Feature definitions
-├── pipeline/
-│   └── etl.py               # ETL pipeline
-├── dashboard/
-│   └── Dashboard Screenshot.png
-├── requirements.txt
-└── README.md
+- api: FastAPI app
+- pipeline: ETL scripts
+- database: Star schema and KPI queries
+- models: ML training and saved model
+- data: Raw and cleaned datasets
+- dashboard: Power BI screenshot
