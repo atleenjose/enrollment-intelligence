@@ -44,7 +44,7 @@ async def lifespan(app: FastAPI):
     artifacts["scaler"]   = joblib.load(MODEL_DIR / "scaler.pkl")
     try:
         artifacts["explainer"] = joblib.load(MODEL_DIR / "shap_explainer.pkl")
-        print("✅ SHAP explainer loaded")
+        print(" SHAP explainer loaded")
     except Exception as e:
         print(f"⚠️  SHAP explainer failed to load: {e}")
         artifacts["explainer"] = None
