@@ -42,7 +42,12 @@ async def lifespan(app: FastAPI):
     artifacts["encoder"]  = load_artifact("label_encoder.pkl")
     artifacts["features"] = load_artifact("feature_columns.pkl")
     artifacts["scaler"]   = joblib.load(MODEL_DIR / "scaler.pkl")
-    artifacts["explainer"] = joblib.load(MODEL_DIR / "shap_explainer.pkl")
+    try:
+        artifacts["explainer"] = joblib.load(MODEL_DIR / "shap_explainer.pkl")
+        print("✅ SHAP explainer loaded")
+    except Exception as e:
+        print(f"⚠️  SHAP explainer failed to load: {e}")
+        artifacts["explainer"] = None
     artifacts["engine"]   = get_engine()
     yield
     artifacts.clear()
@@ -89,17 +94,17 @@ class PredictionResponse(BaseModel):
 
 #Helper: SHAP explanation 
 def get_shap_reasons(input_df: pd.DataFrame) -> list[str]:
-    explainer = artifacts["explainer"]
-    shap_vals = explainer.shap_values(input_df)
-    # Handle both old shap (list) and new shap (3D array)
-    sv = shap_vals[1][0] if isinstance(shap_vals, list) else shap_vals[0, :, 1]
-    feature_names = input_df.columns.tolist()
-    top3 = sorted(zip(feature_names, sv), key=lambda x: abs(x[1]), reverse=True)[:3]
-    reasons = []
-    for feat, val in top3:
-        direction = "increases" if val > 0 else "decreases"
-        reasons.append(f"{feat} {direction} dropout risk")
-    return reasons
+    explainer = artifacts.get("explainer")
+    if explainer is None:
+        return ["SHAP explainer not available"]
+    try:
+        shap_vals = explainer.shap_values(input_df)
+        sv = shap_vals[1][0] if isinstance(shap_vals, list) else shap_vals[0, :, 1]
+        feature_names = input_df.columns.tolist()
+        top3 = sorted(zip(feature_names, sv), key=lambda x: abs(x[1]), reverse=True)[:3]
+        return [f"{feat} {'increases' if val > 0 else 'decreases'} dropout risk" for feat, val in top3]
+    except Exception as e:
+        return [f"Explanation error: {str(e)}"]
 
 #Routes
 @app.get("/health")
