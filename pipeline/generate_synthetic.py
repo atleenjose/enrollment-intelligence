@@ -18,7 +18,7 @@ engine = create_engine(
 )
 
 print("="*55)
-print("  ENROLLMENT INTELLIGENCE — SYNTHETIC DATA GENERATOR")
+print("  ENROLLMENT INTELLIGENCE - SYNTHETIC DATA GENERATOR")
 print(f"  Run at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 print("="*55)
 

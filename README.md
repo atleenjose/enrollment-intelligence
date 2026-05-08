@@ -22,7 +22,7 @@ Raw CSV - ETL Pipeline - PostgreSQL Star Schema - ML Model - FastAPI - Power BI 
 ![Dashboard](dashboard/Dashboard%20Screenshot.png)
 
 ## API
-> Deployment in progress — run locally with:
+> Deployment in progress - run locally with:
 ```bash
 uvicorn api.main:app --reload
 ```

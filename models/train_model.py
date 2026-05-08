@@ -86,7 +86,7 @@ rf_pred  = rf_model.predict(X_test)
 rf_proba = rf_model.predict_proba(X_test)[:, 1]
 rf_auc   = roc_auc_score(y_test, rf_proba)
 
-print("\n Random Forest — Classification Report ")
+print("\n Random Forest - Classification Report ")
 print(classification_report(y_test, rf_pred, target_names=le.classes_))
 print(" Confusion Matrix ")
 print(confusion_matrix(y_test, rf_pred))
@@ -107,7 +107,7 @@ lr_pred  = lr_model.predict(X_test_scaled)
 lr_proba = lr_model.predict_proba(X_test_scaled)[:, 1]
 lr_auc   = roc_auc_score(y_test, lr_proba)
 
-print("\n Logistic Regression — Classification Report ")
+print("\n Logistic Regression - Classification Report ")
 print(classification_report(y_test, lr_pred, target_names=le.classes_))
 print(" Confusion Matrix ")
 print(confusion_matrix(y_test, lr_pred))
