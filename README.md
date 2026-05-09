@@ -1,45 +1,86 @@
-# Enrollment Intelligence
+# Student Enrollment Intelligence System
 
-End-to-end data engineering and ML project predicting student dropout risk.
+An end-to-end data engineering and machine learning project that predicts student dropout risk, surfaces explainable AI insights, and exposes results via a live REST API.
+
+## Live Demo
+**API:** https://enrollment-intelligence.onrender.com/docs
 
 ## Architecture
-Raw CSV - ETL Pipeline - PostgreSQL Star Schema - ML Model - FastAPI - Power BI Dashboard
-
-## Tech Stack
-- Python, Pandas, SQLAlchemy
-- PostgreSQL
-- scikit-learn (Random Forest, 90% accuracy)
-- FastAPI
-- Power BI
-
-## Key Insights
-- 32% dropout rate across 4,424 students
-- Students aged 26-35 have highest dropout risk (57%)
-- Scholarship holders are 3x less likely to drop out
-- Semester 1 grades are the strongest dropout predictor
-
-## PowerBI Dashboard
-![Dashboard](dashboard/Dashboard%20Screenshot.png)
-
-## API
-> Deployment in progress - run locally with:
-```bash
-uvicorn api.main:app --reload
 ```
-Then visit: http://127.0.0.1:8000/docs
+Raw Data (Kaggle)
+      |
+      v
+ETL Pipeline (Python)
+      |
+      v
+PostgreSQL Star Schema (Neon cloud)
+      |
+      v
+ML Models (Random Forest + Logistic Regression)
+      |
+      v
+SHAP Explainability Layer
+      |
+      v
+FastAPI (deployed on Render)
+      |
+      v
+Power BI Dashboard
+```
 
-## Quick Start
+## Stack
+- **Database:** PostgreSQL · Star schema (fact_enrollments, dim_student, dim_course, dim_economics)
+- **ETL:** Python · pandas · SQLAlchemy · validation layer · Faker synthetic data
+- **ML:** scikit-learn · Random Forest (90% accuracy, ROC-AUC 0.9478) · Logistic Regression baseline (ROC-AUC 0.9473)
+- **Explainability:** SHAP TreeExplainer · global feature importance · per-student risk factors
+- **API:** FastAPI · 3 endpoints · deployed on Render
+- **Dashboard:** Power BI web · 6 visuals across KPIs, enrollment outcomes, and ML insights
+- **Cloud:** Neon (PostgreSQL) · Render (API)
+
+## API Endpoints
+| Endpoint | Method | Description |
+| `/predict` | POST | Dropout risk prediction + SHAP reasons |
+| `/student_summary/{id}` | GET | Student profile + enrollment status |
+| `/kpi_metrics` | GET | Institution-wide enrollment KPIs |
+| `/health` | GET | Health check |
+
+## Key Findings
+- Students who fail to pay tuition have significantly higher dropout rates
+- Semester 1 and 2 approved units are the strongest dropout predictors (SHAP)
+- Scholarship holders graduate at nearly 2x the rate of non-scholarship students
+- Younger students (under 24) make up the majority of dropouts by volume
+
+## Dataset
+- 4,424 students · 35 features · sourced from Kaggle
+- Synthetic tables generated: financial_aid (2,600+ rows) · applications (4,424 rows)
+
+## Setup
 ```bash
-git clone https://github.com/atleenjose/enrollment-intelligence.git
+git clone https://github.com/atleenjose/enrollment-intelligence
 cd enrollment-intelligence
 pip install -r requirements.txt
+python models/train_model.py
 uvicorn api.main:app --reload
 ```
 
 ## Project Structure
-- api: FastAPI app
-- pipeline: ETL scripts
-- database: Star schema and KPI queries
-- models: ML training and saved model
-- data: Raw and cleaned datasets
-- dashboard: Power BI screenshot
+```
+enrollment_intelligence/
+├── api/
+│   └── main.py                 # FastAPI app with 3 endpoints
+├── models/
+│   ├── train_model.py          # RF + LR training + SHAP
+│   ├── dropout_model.pkl
+│   └── shap_explainer.pkl
+├── pipeline/
+│   ├── etl.py                  # Data cleaning + loading
+│   ├── validate_records.py     # Validation layer
+│   └── generate_synthetic.py  # Faker synthetic tables
+├── database/
+│   ├── schema.sql
+│   └── kpis.sql
+├── dashboard/
+│   └── Dashboard Screenshot.png
+├── render.yaml
+└── requirements.txt
+```
