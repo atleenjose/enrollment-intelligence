@@ -318,7 +318,7 @@ async def ask(request: AskRequest):
     Examples: 'Why is student 5 at risk?' or 'What is the overall dropout rate?'
     Powered by Claude AI with real student data and SHAP explanations.
     """
-    anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+    anthropic_key = os.getenv("GROQ_API_KEY")
     if not anthropic_key:
         raise HTTPException(status_code=503, detail="AI service not configured")
 
@@ -384,20 +384,22 @@ Never make up data not given to you."""
     try:
         async with httpx.AsyncClient(timeout=30) as client:
             response = await client.post(
-                "https://api.anthropic.com/v1/messages",
+                "https://api.groq.com/openai/v1/chat/completions",
                 headers={
-                    "x-api-key":          anthropic_key,
-                    "anthropic-version":  "2023-06-01",
-                    "content-type":       "application/json",
+                    "Authorization": f"Bearer {os.getenv('GROQ_API_KEY')}",
+                    "Content-Type":  "application/json",
                 },
                 json={
-                    "model":      "claude-haiku-4-5-20251001",
+                    "model": "llama-3.1-8b-instant",
                     "max_tokens": 300,
-                    "system":     system_prompt,
-                    "messages":   [{"role": "user", "content": f"Question: {question}\n\nData:\n{context}"}],
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user",   "content": f"Question: {question}\n\nData:\n{context}"},
+                    ],
                 },
             )
-        answer = response.json()["content"][0]["text"]
+        resp_json = response.json()
+        answer = resp_json["choices"][0]["message"]["content"]
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"AI error: {str(e)}")
 
