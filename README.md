@@ -22,6 +22,9 @@ ML Models (Random Forest + Logistic Regression)
 SHAP Explainability Layer
       |
       v
+LLM Interpretation Layer (Anthropic API)
+      |
+      v
 FastAPI (deployed on Render)
       |
       v
@@ -33,9 +36,18 @@ Power BI Dashboard
 - **ETL:** Python · pandas · SQLAlchemy · validation layer · Faker synthetic data
 - **ML:** scikit-learn · Random Forest (90% accuracy, ROC-AUC 0.9478) · Logistic Regression baseline (ROC-AUC 0.9473)
 - **Explainability:** SHAP TreeExplainer · global feature importance · per-student risk factors
+- **LLM Layer:** Anthropic API for natural-language risk interpretation and advisor-friendly explanations
 - **API:** FastAPI · 3 endpoints · deployed on Render
 - **Dashboard:** Power BI web · 6 visuals across KPIs, enrollment outcomes, and ML insights
 - **Cloud:** Neon (PostgreSQL) · Render (API)
+
+## AI-Powered Risk Explanation
+Added an LLM-powered endpoint that converts model predictions and SHAP feature contributions into simple, human-readable explanations for academic advisors and non-technical stakeholders.
+Example Prompt
+```
+Why is student 56 at risk?
+```
+
 
 ## API Endpoints
 | Endpoint | Method | Description |
@@ -49,6 +61,7 @@ Power BI Dashboard
 - Semester 1 and 2 approved units are the strongest dropout predictors (SHAP)
 - Scholarship holders graduate at nearly 2x the rate of non-scholarship students
 - Younger students (under 24) make up the majority of dropouts by volume
+- LLM-generated explanations improved interpretability of ML predictions for non-technical users
 
 ## Dataset
 - 4,424 students · 35 features · sourced from Kaggle
